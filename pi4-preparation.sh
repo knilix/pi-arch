@@ -7,10 +7,11 @@ cat > pi4-preparation.sh << 'SCRIPTEOF'
 # SSD für Arch Linux ARM auf dem Raspberry Pi 4 vor.
 # Runs on the host PC (Linux). Prepares an SD card or
 # SSD for Arch Linux ARM on the Raspberry Pi 4.
-#
-# Terminal-Pufferung deaktivieren
-export STDBUF_WRAPPED=1
 # ============================================================
+
+# Terminal-Pufferung deaktivieren
+exec 1> >(stdbuf -o0 cat) 2>&1
+
 set -euo pipefail
 
 ALARM_URL="http://os.archlinuxarm.org/os/ArchLinuxARM-rpi-aarch64-latest.tar.gz"
