@@ -12,7 +12,7 @@ cat > pi4-preparation.sh << 'SCRIPTEOF'
 # Terminal-Pufferung deaktivieren
 if [[ -z "${NOBUFFER:-}" ]]; then
     export NOBUFFER=1
-    exec sudo -E "$0" "$@"
+    exec sudo NOBUFFER=1 "$0" "$@"
 fi
 
 set -euo pipefail
