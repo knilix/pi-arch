@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Maintainer: @knilix
 # ============================================================
-# Script 2: pi4-arch-kde.sh
+# Script 2: alarm-rpi4-setup.sh
 # Läuft auf dem Raspberry Pi 4 (als root via SSH).
-# Richtet am Arch Linux ARM KDE Plasma 6 ein.
+# Richtet Arch Linux ARM mit KDE Plasma 6 ein.
 # ============================================================
 
 # Terminal-Pufferung deaktivieren
@@ -102,7 +102,7 @@ systemctl enable NetworkManager
 mkdir -p /etc/NetworkManager/conf.d
 cat > /etc/NetworkManager/conf.d/20-connectivity.conf << EOF
 [connectivity]
-uri=http://ping.archlinux.org/nm-check.txt
+uri=http://nmcheck.gnome.org/check_network_status.txt
 interval=300
 EOF
 
@@ -120,5 +120,6 @@ echo ""
 echo -e "${GREEN}═══ Fertig! ═══${NC}"
 echo -e "${YELLOW}Neustart in 5 Sekunden ... (SSH-Verbindung wird getrennt)${NC}"
 echo ""
+rm -- "$0"
 sleep 5
 reboot
