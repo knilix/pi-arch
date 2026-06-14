@@ -8,11 +8,8 @@ cat > pi4-preparation.sh << 'SCRIPTEOF'
 # Runs on the host PC (Linux). Prepares an SD card or
 # SSD for Arch Linux ARM on the Raspberry Pi 4.
 #
-# Terminal-Pufferung automatisch beheben
-if [[ -z "${STDBUF_WRAPPED:-}" ]]; then
-    export STDBUF_WRAPPED=1
-    exec stdbuf -o0 "$0" "$@"
-fi
+# Terminal-Pufferung deaktivieren
+export STDBUF_WRAPPED=1
 # ============================================================
 set -euo pipefail
 
