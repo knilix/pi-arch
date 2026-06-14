@@ -98,6 +98,14 @@ echo -e "${GREEN}[14/16] Von systemd-networkd auf NetworkManager umschalten ...$
 systemctl disable systemd-networkd
 systemctl enable NetworkManager
 
+# NetworkManager Connectivity-Check konfigurieren
+mkdir -p /etc/NetworkManager/conf.d
+cat > /etc/NetworkManager/conf.d/20-connectivity.conf << EOF
+[connectivity]
+uri=http://ping.archlinux.org/nm-check.txt
+interval=300
+EOF
+
 # ============================================================
 echo -e "${GREEN}[15/16] Passwörter setzen ...${NC}"
 echo ""
