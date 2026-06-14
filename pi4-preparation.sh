@@ -1,4 +1,3 @@
-cat > pi4-preparation.sh << 'SCRIPTEOF'
 #!/usr/bin/env bash
 # Maintener: @knilix
 # ============================================================
@@ -127,6 +126,3 @@ echo ""
 echo -e "${GREEN}═══ Fertig! ═══${NC}"
 echo -e "${YELLOW}SSD in den Pi 4 stecken, LAN an, Strom an.${NC}"
 echo -e "${YELLOW}Danach Script 2 per SSH ausführen.${NC}"
-SCRIPTEOF
-
-chmod +x alarm-rpi4-prepare.sh
