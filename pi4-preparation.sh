@@ -1,4 +1,4 @@
-cat > alarm-rpi4-prepare.sh << 'SCRIPTEOF'
+cat > pi4-preparation.sh << 'SCRIPTEOF'
 #!/usr/bin/env bash
 # Maintener: @knilix
 # ============================================================
