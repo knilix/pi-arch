@@ -10,7 +10,10 @@ cat > pi4-preparation.sh << 'SCRIPTEOF'
 # ============================================================
 
 # Terminal-Pufferung deaktivieren
-exec 1> >(stdbuf -o0 cat) 2>&1
+if [[ -z "${NOBUFFER:-}" ]]; then
+    export NOBUFFER=1
+    exec sudo -E "$0" "$@"
+fi
 
 set -euo pipefail
 
