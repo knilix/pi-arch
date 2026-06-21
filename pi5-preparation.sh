@@ -10,6 +10,7 @@
 # → Boot stoppt beim Logo. Lösung: U-Boot entfernen und den
 # linux-rpi Kernel (RPi Foundation Fork) nachladen. Die Version
 # wird automatisch von archlinuxarm.org ermittelt.
+# Final.
 # ============================================================
 
 if [[ -z "${NOBUFFER:-}" ]]; then
