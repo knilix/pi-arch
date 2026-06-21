@@ -5,6 +5,7 @@
 # Läuft auf dem Raspberry Pi 5 (als root via SSH).
 # Richtet Arch Linux ARM mit KDE Plasma 6 ein.
 # V.0.6
+# Final
 # ============================================================
 
 exec 1> >(stdbuf -o0 cat) 2>&1
