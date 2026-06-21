@@ -38,11 +38,12 @@ echo -e "${GREEN}[3/17] Systemupdate ...${NC}"
 pacman -Syu --noconfirm
 
 # ============================================================
-echo -e "${GREEN}[4/17] Pi 5 Kernel & Firmware wechseln ...${NC}"
-# Erst neuen Kernel + Firmware installieren, dann alten entfernen
-# Reihenfolge wichtig: linux-rpi erst entfernen NACHDEM linux-rpi-16k da ist
-pacman -S --noconfirm --needed linux-rpi-16k raspberrypi-bootloader raspberrypi-firmware
-pacman -Rns --noconfirm linux-rpi
+echo -e "${GREEN}[4/17] Pi 5 Kernel installieren und U-Boot entfernen ...${NC}"
+# linux-rpi-16k = RPi Foundation Kernel mit 16k pagesize, nur für Pi 5 (bcm2712)
+# uboot-raspberrypi unterstützt den Pi 5 nicht → muss weg
+# Reihenfolge: erst neuen Kernel installieren, dann alten + U-Boot entfernen
+pacman -S --noconfirm --needed linux-rpi-16k
+pacman -Rns --noconfirm linux-rpi uboot-raspberrypi
 
 # ============================================================
 echo -e "${GREEN}[5/17] Hostname setzen ...${NC}"
@@ -122,7 +123,6 @@ passwd alarm
 
 # ============================================================
 echo -e "${GREEN}[17/17] Aufräumen ...${NC}"
-# Paket-Cache leeren
 pacman -Sc --noconfirm
 
 # ============================================================
