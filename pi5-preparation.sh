@@ -6,7 +6,6 @@
 # SSD für Arch Linux ARM auf dem Raspberry Pi 5 vor.
 # ============================================================
 
-# Terminal-Pufferung deaktivieren
 if [[ -z "${NOBUFFER:-}" ]]; then
     export NOBUFFER=1
     exec sudo NOBUFFER=1 "$0" "$@"
@@ -77,8 +76,8 @@ echo ""
 echo -e "${GREEN}[3/9] Partitionen anlegen ...${NC}"
 sfdisk "${TARGET}" <<EOF
 label: dos
-size=256MiB, type=c
-type=83
+start=2048,   size=524288, type=c
+start=526336, type=83
 EOF
 sleep 2
 partprobe "${TARGET}" 2>/dev/null || true
@@ -112,15 +111,25 @@ UUID=${UUID_ROOT}  /       ext4    defaults        0       1
 UUID=${UUID_BOOT}  /boot   vfat    defaults        0       2
 EOF
 
-# cmdline.txt für serielle Ausgabe und tty1 auf dem Pi 5 optimiert
-echo "console=serial0,115200 console=tty1 root=UUID=${UUID_ROOT} rw rootwait" > "${MOUNT_BOOT}/cmdline.txt"
-echo -e "  ${GREEN} fstab und cmdline.txt geschrieben${NC}"
+# FIX: rootfstype explizit, verhindert Kernel-Suchschleife beim Pi 5
+echo "console=serial0,115200 console=tty1 root=UUID=${UUID_ROOT} rw rootwait rootfstype=ext4" \
+    > "${MOUNT_BOOT}/cmdline.txt"
+echo -e "  ${GREEN}fstab und cmdline.txt geschrieben${NC}"
 
 echo ""
-echo -e "${GREEN}[8/9] Pi 5 Kernel-Workaround in config.txt aktivieren ...${NC}"
-# Erzwingt den Boot per kernel8.img im Kompatibilitätsmodus für den ersten Start
-echo "kernel=kernel8.img" >> "${MOUNT_BOOT}/config.txt"
-echo -e "  ${GREEN} config.txt für Pi 5 Erststart angepasst${NC}"
+echo -e "${GREEN}[8/9] Pi 5 config.txt schreiben ...${NC}"
+
+# FIX: kernel8.img ist Pi 3/4 – Pi 5 braucht kernel_2712.img
+# arm_64bit=1 ist auf Pi 5 Standard, schadet aber nicht
+# dtoverlay=vc4-kms-v3d ist Pi-5-kompatibel
+cat >> "${MOUNT_BOOT}/config.txt" <<EOF
+
+# Raspberry Pi 5 – Einstellungen
+kernel=kernel_2712.img
+arm_64bit=1
+EOF
+
+echo -e "  ${GREEN}config.txt für Pi 5 angepasst${NC}"
 
 echo ""
 echo -e "${GREEN}[9/9] Sauber aushängen ...${NC}"
