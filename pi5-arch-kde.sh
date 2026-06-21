@@ -4,6 +4,7 @@
 # Script 2: alarm-rpi5-setup.sh
 # Läuft auf dem Raspberry Pi 5 (als root via SSH).
 # Richtet Arch Linux ARM mit KDE Plasma 6 ein.
+# V.0.4
 # ============================================================
 
 exec 1> >(stdbuf -o0 cat) 2>&1
@@ -39,11 +40,12 @@ pacman -Syu --noconfirm
 
 # ============================================================
 echo -e "${GREEN}[4/17] Pi 5 Kernel installieren und U-Boot entfernen ...${NC}"
-# linux-rpi-16k = RPi Foundation Kernel mit 16k pagesize, nur für Pi 5 (bcm2712)
-# uboot-raspberrypi unterstützt den Pi 5 nicht → muss weg
-# Reihenfolge: erst neuen Kernel installieren, dann alten + U-Boot entfernen
+# linux-aarch64 und uboot-raspberrypi sind Pi-5-inkompatibel → erst entfernen
+# linux-rpi ebenfalls entfernen falls vorhanden (kein 16k pagesize)
+# Dann linux-rpi-16k installieren (bcm2712, nur Pi 5)
+pacman -Rns --noconfirm linux-aarch64 uboot-raspberrypi || true
+pacman -Rns --noconfirm linux-rpi 2>/dev/null || true
 pacman -S --noconfirm --needed linux-rpi-16k
-pacman -Rns --noconfirm linux-rpi uboot-raspberrypi
 
 # ============================================================
 echo -e "${GREEN}[5/17] Hostname setzen ...${NC}"
@@ -72,7 +74,6 @@ chmod 440 /etc/sudoers.d/wheel
 
 # ============================================================
 echo -e "${GREEN}[10/17] Mesa-Grafiktreiber installieren ...${NC}"
-# lib32-mesa existiert nicht im ALARM aarch64 Repository
 pacman -S --noconfirm --needed mesa xf86-video-fbdev
 
 # ============================================================
