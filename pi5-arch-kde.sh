@@ -8,7 +8,6 @@
 # ============================================================
 
 exec 1> >(stdbuf -o0 cat) 2>&1
-
 set -euo pipefail
 
 RED='\033[0;31m'
@@ -39,13 +38,17 @@ echo -e "${GREEN}[3/17] Systemupdate ...${NC}"
 pacman -Syu --noconfirm
 
 # ============================================================
-echo -e "${GREEN}[4/17] Pi 5 Kernel installieren und U-Boot entfernen ...${NC}"
-# linux-aarch64 und uboot-raspberrypi sind Pi-5-inkompatibel → erst entfernen
-# linux-rpi ebenfalls entfernen falls vorhanden (kein 16k pagesize)
-# Dann linux-rpi-16k installieren (bcm2712, nur Pi 5)
+echo -e "${GREEN}[4/17] Pi 5 Kernel installieren und inkompatible Pakete entfernen ...${NC}"
+
+# Entfernen inkompatibler Kernel/Bootloader
 pacman -Rns --noconfirm linux-aarch64 uboot-raspberrypi || true
 pacman -Rns --noconfirm linux-rpi 2>/dev/null || true
-pacman -S --noconfirm --needed --overwrite "*" raspberrypi-bootloader raspberrypi-bootloader-x linux-rpi-16k
+
+# Bootloader sicherstellen (NICHT entfernen!)
+pacman -S --noconfirm --needed --overwrite "*" raspberrypi-bootloader
+
+# Pi‑5‑Kernel installieren/überschreiben (füllt /boot IMMER korrekt)
+pacman -S --noconfirm --needed --overwrite "*" linux-rpi-16k
 
 # ============================================================
 echo -e "${GREEN}[5/17] Hostname setzen ...${NC}"
@@ -126,10 +129,9 @@ passwd alarm
 echo -e "${GREEN}[17/17] Aufräumen ...${NC}"
 pacman -Sc --noconfirm
 
-# ============================================================
 echo ""
 echo -e "${GREEN}═══ Fertig! ═══${NC}"
-echo -e "${YELLOW}Neustart in 5 Sekunden ... (SSH-Verbindung wird getrennt)${NC}"
+echo -e "${YELLOW}Neustart in 5 Sekunden ...${NC}"
 echo ""
 rm -- "$0"
 sleep 5
