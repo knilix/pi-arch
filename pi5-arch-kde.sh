@@ -4,8 +4,7 @@
 # Script 2: alarm-rpi5-setup.sh
 # Läuft auf dem Raspberry Pi 5 (als root via SSH).
 # Richtet Arch Linux ARM mit KDE Plasma 6 ein.
-# V.0.6
-# Final - ERROR!
+# V.0.7
 # ============================================================
 
 exec 1> >(stdbuf -o0 cat) 2>&1
@@ -44,10 +43,9 @@ echo -e "${GREEN}[4/17] Pi 5 Kernel installieren und U-Boot entfernen ...${NC}"
 # linux-aarch64 und uboot-raspberrypi sind Pi-5-inkompatibel → erst entfernen
 # linux-rpi ebenfalls entfernen falls vorhanden (kein 16k pagesize)
 # Dann linux-rpi-16k installieren (bcm2712, nur Pi 5)
-pacman -Rns --noconfirm linux-aarch64 uboot-raspberrypi raspberrypi-bootloader || true
+pacman -Rns --noconfirm linux-aarch64 uboot-raspberrypi || true
 pacman -Rns --noconfirm linux-rpi 2>/dev/null || true
-rm -rf /boot/*
-pacman -S --noconfirm --needed --overwrite "*" linux-rpi-16k
+pacman -S --noconfirm --needed --overwrite "*" raspberrypi-bootloader raspberrypi-bootloader-x linux-rpi-16k
 
 # ============================================================
 echo -e "${GREEN}[5/17] Hostname setzen ...${NC}"
